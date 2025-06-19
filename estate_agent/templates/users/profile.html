@@ -1,0 +1,149 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'estate_agent/css/profile_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <i class="fas fa-building logo-icon"></i>
+                <h1>Личный кабинет</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    {% if user.is_authenticated %}
+                    <i class="fas fa-user"></i>
+                    {{ user.username }}
+                    <span id="agentName">Агент</span>
+                    {% endif %}
+                </div>
+                {% if user.is_authenticated %}
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Выйти
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Всего объявлений</p>
+                    <p class="stat-value">{{ total_listings }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon active">
+                    <i class="fas fa-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Активных</p>
+                    <p class="stat-value">{{ active_listings }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon sold">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Продано</p>
+                    <p class="stat-value">{{ sold_listings }}</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon monthly">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">За месяц</p>
+                    <p class="stat-value">{{ monthly_listings }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="analytics-section">
+            <div class="analytics-card">
+                <h3><i class="fas fa-chart-line"></i> Средняя цена</h3>
+                <ul class="analytics-list">
+                    {% for item in avg_prices %}
+                    <li>
+                        <span>{{ item.property_type }}:</span>
+                        <span>{{ item.avg_price|floatformat:0 }} ₽</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="analytics-card">
+                <h3><i class="fas fa-map-marker-alt"></i> Популярные города</h3>
+                <ul class="analytics-list">
+                    {% for city in top_cities %}
+                    <li>
+                        <span>{{ city.city }}:</span>
+                        <span>{{ city.total }} объявлений</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Listings Grid -->
+        <div class="listings-grid">
+            {% for listing in listings %}
+            <div class="listing-card">
+                <div class="listing-header">
+                    <h3>{{ listing.title }}</h3>
+                    <span class="listing-status {{ listing.status }}">
+                        {{ listing.get_status_display }}
+                    </span>
+                </div>
+                <p class="listing-address">{{ listing.address }}</p>
+                <div class="listing-details">
+                    <span>{{ listing.rooms }} комн.</span>
+                    <span>{{ listing.area }} м²</span>
+                    <span>{{ listing.price }} ₽</span>
+                </div>
+                <div class="listing-actions">
+                    <a href="{% url 'listings:update' listing.pk %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'listings:delete' listing.pk %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-home"></i>
+                <h3>Объявления не найдены</h3>
+                <p>Начните с добавления нового объявления</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Add Listing Button -->
+        <div class="add-listing-btn">
+            <a href="{% url 'listings:create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Добавить объявление
+            </a>
+        </div>
+    </main>
+{% endblock %}

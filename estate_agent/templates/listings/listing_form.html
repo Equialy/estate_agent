@@ -1,0 +1,268 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Редактирование объявления{% else %}Добавить объявление{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        {% if object %}Редактирование объявления{% else %}Добавить новое объявление{% endif %}
+                    </h1>
+                    <p class="mt-2 text-gray-600">
+                        {% if object %}Внесите изменения в объявление{% else %}Заполните информацию о новом объявлении{% endif %}
+                    </p>
+                </div>
+                <a href="{% url 'listings:dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Назад к списку
+                </a>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-lg shadow-sm border">
+            <div class="p-6">
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="text-red-600 mb-4">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    <!-- Title - Full Width -->
+                    <div class="form-group">
+                        <label for="{{ form.title.id_for_label }}" class="form-label required">
+                            <i class="bi bi-house-door me-2"></i>{{ form.title.label }}
+                        </label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.title.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description - Full Width -->
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}" class="form-label required">
+                            <i class="bi bi-text-paragraph me-2"></i>{{ form.description.label }}
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.description.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Price and Area Row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.price.id_for_label }}" class="form-label required">
+                                    <i class="bi bi-currency-dollar me-2"></i>{{ form.price.label }}
+                                </label>
+                                {{ form.price }}
+                                {% if form.price.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.price.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.area.id_for_label }}" class="form-label required">
+                                    <i class="bi bi-rulers me-2"></i>{{ form.area.label }}
+                                </label>
+                                {{ form.area }}
+                                {% if form.area.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.area.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Type and Deal Type Row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.property_type.id_for_label }}" class="form-label required">
+                                    <i class="bi bi-building me-2"></i>{{ form.property_type.label }}
+                                </label>
+                                {{ form.property_type }}
+                                {% if form.property_type.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.property_type.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.transaction_type.id_for_label }}" class="form-label required">
+                                    <i class="bi bi-tag me-2"></i>{{ form.transaction_type.label }}
+                                </label>
+                                {{ form.transaction_type }}
+                                {% if form.transaction_type.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.transaction_type.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rooms and Status Row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.rooms.id_for_label }}" class="form-label required">
+                                    <i class="bi bi-door-open me-2"></i>{{ form.rooms.label }}
+                                </label>
+                                {{ form.rooms }}
+                                {% if form.rooms.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.rooms.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.status.id_for_label }}" class="form-label required">
+                                    <i class="bi bi-check-circle me-2"></i>{{ form.status.label }}
+                                </label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.status.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address - Full Width -->
+                    <div class="form-group">
+                        <label for="{{ form.address.id_for_label }}" class="form-label required">
+                            <i class="bi bi-geo-alt me-2"></i>{{ form.address.label }}
+                        </label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.address.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.city.id_for_label }}" class="form-label required">
+                            <i class="bi bi-building me-2"></i>{{ form.city.label }}
+                        </label>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.city.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex justify-content-between align-items-center pt-4 border-top">
+                        <a href="{% url 'listings:dashboard' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-2"></i>
+                            Отмена
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-check-circle me-2"></i>
+                            {% if object %}Сохранить изменения{% else %}Создать объявление{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Help Text -->
+        <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div class="flex items-start">
+                <i class="bi bi-info-circle text-blue-600 me-3 mt-1"></i>
+                <div class="text-sm text-blue-800">
+                    <p class="font-medium mb-1">Советы по заполнению:</p>
+                    <ul class="list-disc list-inside space-y-1 text-blue-700">
+                        <li>Используйте понятное и привлекательное название</li>
+                        <li>Подробно опишите все преимущества недвижимости</li>
+                        <li>Указывайте точный адрес для лучшего поиска</li>
+                        <li>Проверьте правильность указанной цены</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-label.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 10px 20px;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #e5e7eb;
+    color: #6b7280;
+}
+
+.btn-outline-secondary:hover {
+    background: #f8fafc;
+    border-color: #d1d5db;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+</style>
+{% endblock %}
