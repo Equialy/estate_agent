@@ -32,8 +32,12 @@
                                 {{ object.address }}
                             </div>
                             <div class="flex items-center">
+                                <i class="bi bi-geo-alt me-2"></i>
+                                {{ object.description }}
+                            </div>
+                            <div class="flex items-center">
                                 <i class="bi bi-currency-dollar me-2"></i>
-                                {{ object.get_price_display }}
+                                {{ object.price }}
                             </div>
                             <div class="flex items-center space-x-4">
                                 <span class="flex items-center">
